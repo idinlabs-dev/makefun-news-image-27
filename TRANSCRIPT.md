@@ -95,3 +95,37 @@ presented as 27 Nov stories.
 - Britain contacts 100,000 veterans (kept, as ticker stat 1).
 - Bangkok oil depot explosion (cut: casualty figures not yet verified
   at build time).
+
+## Fix round 3 — lowercase 'a' + digit '9' (after parent QC of the render)
+
+- Parent read the final render and found lowercase 'a' reading as 'd':
+  "Kuwait" -> "Kuwdit", "Attack" -> "Attdck", "and" -> "dna". Root cause:
+  the 'a' (bowl + full-height right stem from y=2) differed from 'd'
+  (same bowl + stem from y=0) by only 1-2 grid units of stem height —
+  invisible at 15-16px render size.
+- First attempt (double-storey 'a': two stacked bowls sharing a middle
+  bar) was TESTED on a strip and REJECTED: it reads as 'e' everywhere
+  ("Kuwait" -> "Kuweit", "Attack" -> "Atteck", "banana" -> "benene")
+  because a closed bowl + full-width middle bar is exactly the 'e'
+  construction.
+- Final 'a': single-storey bowl with a SHORT right stem starting one unit
+  below the bowl top ("43 46|12 32 43 45 36 16 05 03 12"): 3 grid units
+  shorter than 'd''s ascender, no horizontal bar (unlike 'e'), stem +
+  small foot at bottom-right (unlike 'o'). Verified on a test strip at
+  real sizes (13/15.5/16/20/24/28px) and at 3x magnification: "Kuwait",
+  "Attack", "Italian", "and", "blame", "Iran", "Gaza", "Palestinians",
+  "aadadd dad bad banana Canada" all read correctly, letter by letter;
+  'a' vs 'd' unmistakable at 3x.
+- Digit '9': the committed '9' was a loop with no stem and read like a
+  sigma; the '9' in the working tree ("10 30 41 43 33 13 02 01 10|43 46",
+  loop y=0-3 + straight stem to baseline) was verified on the same strip:
+  "9 VERIFIED REPORTS" (13px and 39px) and "$621.9M" (24px and 72px) all
+  read correctly. Kept unchanged.
+- Full-table audit at 3x (lowercase, digits, e/c, o/0, 1/l/I, 5/S, g/9,
+  u/v, rn/m): no other lookalike needed changing.
+- Re-verification: two runs byte-identical (sha256
+  833122589bbc0b2ac90c559b0cfd135334eda1fb5c786aa871ccf4db93c11e25),
+  1024x1024, 33,177 bytes. Programmatic ink measurement: lowest ink per
+  card Story 1 y=454, Story 2 y=468, Gaza y=805, Ukraine y=808, Ebola
+  y=780 — all clear of the bottom borders (8-42px gap). Final full image
+  read end-to-end, every word correct.
